@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const signupForm = document.getElementById("signup-form");
   const activityInput = document.getElementById("activity");
   const closeRegistrationModal = document.querySelector(".close-modal");
+  const emailInput = document.getElementById("email");
 
   // Search and filter elements
   const searchInput = document.getElementById("activity-search");
@@ -43,6 +44,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Authentication state
   let currentUser = null;
+
+  // Recently used emails storage
+  let recentEmails = [];
+  const MAX_RECENT_EMAILS = 10;
 
   // Time range mappings for the dropdown
   const timeRanges = {
@@ -107,6 +112,8 @@ document.addEventListener("DOMContentLoaded", () => {
         updateAuthUI();
         // Verify the stored user with the server
         validateUserSession(currentUser.username);
+        // Load recent emails for this teacher
+        loadRecentEmails();
       } catch (error) {
         console.error("Error parsing saved user", error);
         logout(); // Clear invalid data
@@ -115,6 +122,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Set authentication class on body
     updateAuthBodyClass();
+  }
+
+  // Load recent emails from localStorage
+  function loadRecentEmails() {
+    if (!currentUser) return;
+    
+    try {
+      const savedEmails = localStorage.getItem(`recentEmails_${currentUser.username}`);
+      if (savedEmails) {
+        recentEmails = JSON.parse(savedEmails);
+      }
+    } catch (error) {
+      console.error("Error loading recent emails:", error);
+      recentEmails = [];
+    }
+  }
+
+  // Save an email to recent emails
+  function saveRecentEmail(email) {
+    if (!currentUser || !email) return;
+    
+    // Remove the email if it already exists (to move it to the front)
+    recentEmails = recentEmails.filter(e => e.toLowerCase() !== email.toLowerCase());
+    
+    // Add the new email to the front of the array
+    recentEmails.unshift(email);
+    
+    // Limit the size of the array
+    if (recentEmails.length > MAX_RECENT_EMAILS) {
+      recentEmails = recentEmails.slice(0, MAX_RECENT_EMAILS);
+    }
+    
+    // Save to localStorage
+    localStorage.setItem(`recentEmails_${currentUser.username}`, JSON.stringify(recentEmails));
   }
 
   // Validate user session with the server
@@ -205,6 +246,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Logout function
   function logout() {
     currentUser = null;
+    recentEmails = []; // Clear recent emails from memory
     localStorage.removeItem("currentUser");
     updateAuthUI();
     showMessage("You have been logged out.", "info");
@@ -650,6 +692,129 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
       registrationModal.classList.add("show");
     }, 10);
+    
+    // Setup email suggestions
+    setupEmailSuggestions();
+  }
+  
+  // Setup email suggestions for the registration form
+  function setupEmailSuggestions() {
+    // Remove any existing suggestions container
+    const existingSuggestions = document.getElementById("email-suggestions");
+    if (existingSuggestions) {
+      existingSuggestions.remove();
+    }
+    
+    // Create suggestions container
+    const suggestionsContainer = document.createElement("div");
+    suggestionsContainer.id = "email-suggestions";
+    suggestionsContainer.className = "email-suggestions";
+    emailInput.parentNode.appendChild(suggestionsContainer);
+    
+    // Add event listeners for the email input
+    emailInput.addEventListener("input", updateEmailSuggestions);
+    emailInput.addEventListener("focus", updateEmailSuggestions);
+    emailInput.addEventListener("keydown", handleSuggestionKeyNavigation);
+    
+    // Initial update
+    updateEmailSuggestions();
+  }
+  
+  // Update email suggestions based on input
+  function updateEmailSuggestions() {
+    const suggestionsContainer = document.getElementById("email-suggestions");
+    if (!suggestionsContainer) return;
+    
+    const inputValue = emailInput.value.toLowerCase();
+    
+    // Filter recent emails based on input
+    const filteredEmails = recentEmails.filter(email => 
+      email.toLowerCase().includes(inputValue)
+    );
+    
+    // Clear existing suggestions
+    suggestionsContainer.innerHTML = "";
+    
+    // If no input or no matches, hide suggestions
+    if (inputValue === "" || filteredEmails.length === 0) {
+      suggestionsContainer.classList.remove("show");
+      return;
+    }
+    
+    // Create and append suggestion elements
+    filteredEmails.forEach((email, index) => {
+      const suggestion = document.createElement("div");
+      suggestion.className = "email-suggestion";
+      suggestion.dataset.index = index;
+      suggestion.textContent = email;
+      
+      // Highlight the matching part
+      if (inputValue) {
+        const regex = new RegExp(`(${inputValue})`, "gi");
+        suggestion.innerHTML = email.replace(
+          regex, 
+          '<span class="highlight">$1</span>'
+        );
+      }
+      
+      suggestion.addEventListener("click", () => {
+        emailInput.value = email;
+        suggestionsContainer.classList.remove("show");
+      });
+      
+      suggestionsContainer.appendChild(suggestion);
+    });
+    
+    // Show suggestions
+    suggestionsContainer.classList.add("show");
+  }
+  
+  // Handle keyboard navigation for suggestions
+  function handleSuggestionKeyNavigation(event) {
+    const suggestionsContainer = document.getElementById("email-suggestions");
+    if (!suggestionsContainer || !suggestionsContainer.classList.contains("show")) return;
+    
+    const suggestions = suggestionsContainer.querySelectorAll(".email-suggestion");
+    if (suggestions.length === 0) return;
+    
+    // Find currently selected suggestion
+    const selectedSuggestion = suggestionsContainer.querySelector(".selected");
+    let selectedIndex = -1;
+    
+    if (selectedSuggestion) {
+      selectedIndex = parseInt(selectedSuggestion.dataset.index);
+    }
+    
+    switch (event.key) {
+      case "ArrowDown":
+        event.preventDefault();
+        // Select next suggestion
+        selectedIndex = (selectedIndex + 1) % suggestions.length;
+        break;
+      case "ArrowUp":
+        event.preventDefault();
+        // Select previous suggestion
+        selectedIndex = (selectedIndex - 1 + suggestions.length) % suggestions.length;
+        break;
+      case "Enter":
+        // If a suggestion is selected, use it
+        if (selectedIndex !== -1) {
+          event.preventDefault();
+          emailInput.value = suggestions[selectedIndex].textContent;
+          suggestionsContainer.classList.remove("show");
+        }
+        return;
+      case "Escape":
+        // Hide suggestions
+        suggestionsContainer.classList.remove("show");
+        return;
+      default:
+        return;
+    }
+    
+    // Update selection
+    suggestions.forEach(s => s.classList.remove("selected"));
+    suggestions[selectedIndex].classList.add("selected");
   }
 
   // Close registration modal
@@ -658,6 +823,17 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
       registrationModal.classList.add("hidden");
       signupForm.reset();
+      
+      // Clean up suggestions
+      const suggestionsContainer = document.getElementById("email-suggestions");
+      if (suggestionsContainer) {
+        suggestionsContainer.remove();
+      }
+      
+      // Remove event listeners
+      emailInput.removeEventListener("input", updateEmailSuggestions);
+      emailInput.removeEventListener("focus", updateEmailSuggestions);
+      emailInput.removeEventListener("keydown", handleSuggestionKeyNavigation);
     }, 300);
   }
 
@@ -785,6 +961,9 @@ document.addEventListener("DOMContentLoaded", () => {
           const result = await response.json();
 
           if (response.ok) {
+            // Save the email to recent emails (keep it in the list for future use)
+            saveRecentEmail(email);
+            
             showMessage(result.message, "success");
             // Refresh the activities list
             fetchActivities();
@@ -842,6 +1021,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const result = await response.json();
 
       if (response.ok) {
+        // Save the email to recent emails
+        saveRecentEmail(email);
+        
         showMessage(result.message, "success");
         closeRegistrationModalHandler();
         // Refresh the activities list after successful signup

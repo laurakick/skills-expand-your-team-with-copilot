@@ -664,3 +664,43 @@ footer {
 #logout-button:hover {
   background-color: rgba(255, 255, 255, 0.3);
 }
+
+/* Email suggestions dropdown */
+.email-suggestions {
+  position: absolute;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  display: none;
+  margin-top: 2px;
+}
+
+.email-suggestions.show {
+  display: block;
+}
+
+.email-suggestion {
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.email-suggestion:hover, 
+.email-suggestion.selected {
+  background-color: var(--border-light);
+}
+
+.email-suggestion .highlight {
+  font-weight: bold;
+  color: var(--primary);
+}
+
+/* Position the email suggestions container correctly */
+.form-group {
+  position: relative;
+}
