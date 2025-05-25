@@ -1,0 +1,119 @@
+name: Website Layout or Appearance Change
+description: Request changes to how the website looks or functions
+title: "Website Change: "
+labels: ["enhancement", "ui", "design"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Website Change Request Form
+        Please fill out this form to request changes to the website's layout, design, or functionality.
+        
+        All fields marked with an asterisk (*) are required.
+
+  - type: dropdown
+    id: change-type
+    attributes:
+      label: Type of Change*
+      description: What kind of change are you requesting?
+      options:
+        - Visual Design (colors, fonts, styling)
+        - Layout Change (arrangement of elements)
+        - New Feature/Functionality
+        - Usability Improvement
+        - Other (please specify below)
+    validations:
+      required: true
+
+  - type: textarea
+    id: change-description
+    attributes:
+      label: Change Description*
+      description: Please describe in detail what you would like changed
+      placeholder: "I would like to have the activity cards display in a calendar view, organized by day of the week, instead of just as a list."
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-experience
+    attributes:
+      label: Current Experience*
+      description: Describe how the website currently works in this area
+      placeholder: "Currently, activities are displayed as cards in a grid layout, and users have to use filters to see activities on specific days."
+    validations:
+      required: true
+
+  - type: textarea
+    id: desired-experience
+    attributes:
+      label: Desired Experience*
+      description: Describe how you would like the website to work after this change
+      placeholder: "I would like to see a weekly calendar view where activities are placed on the days they occur, making it easier to see what's available each day."
+    validations:
+      required: true
+
+  - type: textarea
+    id: reason
+    attributes:
+      label: Reason for Change
+      description: Why is this change needed? How will it benefit users?
+      placeholder: "This change would make it much easier for students to see what activities are available on specific days, helping them plan their schedules more effectively."
+    validations:
+      required: false
+
+  - type: textarea
+    id: mockup
+    attributes:
+      label: Visual Example or Mockup
+      description: If you have any visual examples, mockups, or sketches of what you envision, please describe or paste links here
+      placeholder: "I've drawn a simple mockup of how the calendar view might look. [Link to image or description]"
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ## For Copilot/Developer Reference
+        
+        When implementing UI/design changes:
+        
+        1. Consider responsive design for different screen sizes
+        2. Maintain accessibility standards (color contrast, keyboard navigation, etc.)
+        3. Try to reuse existing CSS variables and patterns where possible
+        4. Update any related documentation
+        
+        Key files that may need modification:
+        - `src/static/index.html` - For layout changes
+        - `src/static/styles.css` - For styling changes
+        - `src/static/app.js` - For functionality changes
+        
+        CSS variables used in the project:
+        ```css
+        :root {
+          /* Primary colors */
+          --primary: #1a237e;
+          --primary-light: #534bae;
+          --primary-dark: #000051;
+          --primary-text: #ffffff;
+        
+          /* Secondary colors */
+          --secondary: #ff6f00;
+          --secondary-light: #ffa040;
+          --secondary-dark: #c43e00;
+          --secondary-text: #ffffff;
+        
+          /* Neutral colors */
+          --background: #f5f5f5;
+          --surface: #ffffff;
+          --text-primary: #333333;
+          --text-secondary: #666666;
+          --border: #e0e0e0;
+          
+          /* Feedback colors */
+          --success: #2e7d32;
+          --warning: #ff9800;
+          --error: #c62828;
+        }
+        ```

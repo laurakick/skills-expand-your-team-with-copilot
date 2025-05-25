@@ -1,0 +1,107 @@
+name: Fix Activity Information
+description: Report incorrect information about an existing activity
+title: "Fix Activity Info: "
+labels: ["bug", "activity", "information"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Activity Information Correction Form
+        Please fill out this form to report incorrect information about an existing activity.
+        
+        All fields marked with an asterisk (*) are required.
+
+  - type: input
+    id: activity-name
+    attributes:
+      label: Activity Name*
+      description: What is the name of the activity with incorrect information?
+      placeholder: "Chess Club"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: information-type
+    attributes:
+      label: Type of Incorrect Information*
+      description: What type of information is incorrect?
+      options:
+        - Activity Description
+        - Meeting Schedule (days/times)
+        - Location
+        - Teacher/Sponsor
+        - Maximum Participants
+        - Category
+        - Other (please specify below)
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-info
+    attributes:
+      label: Current (Incorrect) Information*
+      description: What is currently displayed on the website that is incorrect?
+      placeholder: "The Chess Club location is listed as Room 123."
+    validations:
+      required: true
+
+  - type: textarea
+    id: correct-info
+    attributes:
+      label: Correct Information*
+      description: What is the correct information that should be displayed?
+      placeholder: "The Chess Club actually meets in Room 210."
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: Additional Information
+      description: Is there any other context that would be helpful?
+      placeholder: "The room was changed last week due to renovations in the original room."
+    validations:
+      required: false
+
+  - type: dropdown
+    id: urgency
+    attributes:
+      label: Urgency
+      description: How urgent is this correction?
+      options:
+        - High - Causing significant confusion or problems
+        - Medium - Should be fixed soon
+        - Low - Minor issue that can be fixed when convenient
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ## For Copilot/Developer Reference
+        
+        When implementing this request:
+        
+        1. Find the activity by name in the activities data
+        2. Update the specific field that contains incorrect information
+        3. Verify that the change doesn't impact any other functionality
+        
+        Example:
+        ```javascript
+        // Find the activity
+        const activity = activities.find(a => a.name === activityName);
+        
+        if (activity) {
+          // Update the specific field based on the information type
+          // For example, if it's a location update:
+          activity.details.location = correctInformation;
+          
+          // If it's schedule-related, might need to update both display string and structured data
+          if (informationType === "Meeting Schedule") {
+            activity.details.schedule = correctDisplayString;
+            activity.details.schedule_details = updatedScheduleObject;
+          }
+        }
+        ```

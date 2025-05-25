@@ -1,0 +1,126 @@
+name: Manage Student Registration
+description: Add or remove students from an activity
+title: "Student Registration: "
+labels: ["student", "registration"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Student Registration Management Form
+        Please fill out this form to request adding or removing students from an activity.
+        
+        All fields marked with an asterisk (*) are required.
+
+  - type: input
+    id: activity-name
+    attributes:
+      label: Activity Name*
+      description: What is the name of the activity?
+      placeholder: "Chess Club"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: action-type
+    attributes:
+      label: Action*
+      description: Do you want to add or remove students?
+      options:
+        - Add students to this activity
+        - Remove students from this activity
+        - Both add and remove students
+    validations:
+      required: true
+
+  - type: textarea
+    id: students-to-add
+    attributes:
+      label: Students to Add
+      description: List the email addresses of students to ADD to this activity (one per line)
+      placeholder: "student1@mergington.edu\nstudent2@mergington.edu"
+    validations:
+      required: false
+
+  - type: textarea
+    id: students-to-remove
+    attributes:
+      label: Students to Remove
+      description: List the email addresses of students to REMOVE from this activity (one per line)
+      placeholder: "student3@mergington.edu\nstudent4@mergington.edu"
+    validations:
+      required: false
+
+  - type: textarea
+    id: reason
+    attributes:
+      label: Reason for Changes
+      description: Why are these students being added or removed? (Optional but helpful)
+      placeholder: "These students signed up during the in-person club fair but weren't able to register online."
+    validations:
+      required: false
+
+  - type: dropdown
+    id: notification
+    attributes:
+      label: Student Notification
+      description: Should students be notified of this change?
+      options:
+        - Yes, notify the students
+        - No, don't notify the students
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ## For Copilot/Developer Reference
+        
+        When implementing this request:
+        
+        1. Find the activity by name
+        2. For each student to add:
+           - Verify the email format is valid (should end with @mergington.edu)
+           - Check if the activity has room for more participants
+           - Add the student if not already registered
+        3. For each student to remove:
+           - Find and remove the student from the activity's participant list
+        
+        Example code for adding a student:
+        ```javascript
+        async function addStudentToActivity(activityName, studentEmail, teacherUsername) {
+          try {
+            const response = await fetch(
+              `/activities/${encodeURIComponent(activityName)}/signup?email=${encodeURIComponent(studentEmail)}&teacher_username=${encodeURIComponent(teacherUsername)}`,
+              {
+                method: "POST",
+              }
+            );
+            
+            return await response.json();
+          } catch (error) {
+            console.error("Error adding student:", error);
+            throw error;
+          }
+        }
+        ```
+        
+        Example code for removing a student:
+        ```javascript
+        async function removeStudentFromActivity(activityName, studentEmail, teacherUsername) {
+          try {
+            const response = await fetch(
+              `/activities/${encodeURIComponent(activityName)}/unregister?email=${encodeURIComponent(studentEmail)}&teacher_username=${encodeURIComponent(teacherUsername)}`,
+              {
+                method: "POST",
+              }
+            );
+            
+            return await response.json();
+          } catch (error) {
+            console.error("Error removing student:", error);
+            throw error;
+          }
+        }
+        ```

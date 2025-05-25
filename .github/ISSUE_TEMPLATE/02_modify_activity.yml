@@ -1,0 +1,106 @@
+name: Modify Existing Activity
+description: Request to modify details of an existing extracurricular activity
+title: "Modify Activity: "
+labels: ["enhancement", "activity", "modification"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Activity Modification Form
+        Please fill out this form to request changes to an existing extracurricular activity.
+        
+        All fields marked with an asterisk (*) are required.
+
+  - type: input
+    id: activity-name
+    attributes:
+      label: Activity Name*
+      description: What is the name of the activity you want to modify?
+      placeholder: "Chess Club"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: modification-type
+    attributes:
+      label: What needs to be modified?*
+      description: Check all that apply
+      options:
+        - label: Activity name
+        - label: Description
+        - label: Category
+        - label: Meeting days
+        - label: Meeting times
+        - label: Location
+        - label: Teacher/Sponsor
+        - label: Maximum participants
+        - label: Other (please specify below)
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-info
+    attributes:
+      label: Current Information*
+      description: Please describe the current information that needs to be changed
+      placeholder: "The Chess Club currently meets on Mondays and Wednesdays at 3:30 PM"
+    validations:
+      required: true
+
+  - type: textarea
+    id: new-info
+    attributes:
+      label: New Information*
+      description: Please describe the new information that should replace the current information
+      placeholder: "The Chess Club should now meet on Tuesdays and Thursdays at 4:00 PM"
+    validations:
+      required: true
+
+  - type: textarea
+    id: reason-for-change
+    attributes:
+      label: Reason for Change
+      description: Why is this change needed? (Optional but helpful for tracking)
+      placeholder: "The teacher sponsor has a schedule conflict with the current meeting times."
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: Additional Information
+      description: Is there any other information we should know about this modification?
+      placeholder: "This change should take effect starting next week."
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ## For Copilot/Developer Reference
+        
+        When implementing this request, find the activity by name in the activities data and update the specified fields.
+        
+        Some examples of fields in the data structure:
+        
+        ```javascript
+        {
+          "name": "Activity Name",
+          "details": {
+            "description": "Activity description",
+            "category": "Activity category",
+            "location": "Activity location",
+            "instructor": "Teacher name",
+            "max_participants": 20, // Number or null if unlimited
+            "schedule": "Days, Start Time - End Time",
+            "schedule_details": {
+              "days": ["Day1", "Day2"],
+              "start_time": "15:30",
+              "end_time": "17:00",
+              "time_category": "morning/afternoon/weekend"
+            }
+          }
+        }
+        ```
