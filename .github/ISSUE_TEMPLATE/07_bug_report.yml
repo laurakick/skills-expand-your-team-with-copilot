@@ -1,0 +1,115 @@
+name: Bug Report
+description: Report a problem with the website
+title: "Bug: "
+labels: ["bug"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Bug Report Form
+        Please fill out this form to report a problem with the website.
+        
+        All fields marked with an asterisk (*) are required.
+
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: Bug Description*
+      description: Please describe what is happening that seems incorrect
+      placeholder: "When I try to register a student for an activity, I get an error message saying 'Failed to sign up' even though all the information is correct."
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior*
+      description: What did you expect to happen instead?
+      placeholder: "I should be able to successfully register the student and see a confirmation message."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to Reproduce*
+      description: Please provide the exact steps to reproduce this bug
+      placeholder: |
+        1. Log in as a teacher
+        2. Click on the 'Chess Club' activity
+        3. Click the 'Register Student' button
+        4. Fill in student email as 'student@mergington.edu'
+        5. Click Submit
+        6. See error message
+    validations:
+      required: true
+
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: Browser
+      description: Which browser(s) are you seeing this problem on?
+      multiple: true
+      options:
+        - Chrome
+        - Firefox
+        - Safari
+        - Edge
+        - Internet Explorer
+        - Other (please specify in additional information)
+    validations:
+      required: false
+
+  - type: dropdown
+    id: frequency
+    attributes:
+      label: How often does this happen?
+      description: How consistently can you reproduce this bug?
+      options:
+        - Every time (100%)
+        - Most of the time (about 75%)
+        - Sometimes (about 50%)
+        - Occasionally (about 25%)
+        - Rarely (less than 10%)
+        - Only happened once
+    validations:
+      required: false
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: If applicable, add screenshots to help explain your problem
+      placeholder: "You can paste screenshots directly here or describe what would be helpful to see in a screenshot."
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: Additional Information
+      description: Any other information that might be helpful
+      placeholder: "This problem started happening after the recent website update."
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ## For Copilot/Developer Reference
+        
+        When investigating this bug:
+        
+        1. Check the browser console for JavaScript errors
+        2. Verify API requests and responses in the Network tab
+        3. Test on multiple browsers if browser-specific
+        4. Consider common issues:
+           - Input validation
+           - API endpoint issues
+           - Authentication/permissions
+           - Race conditions
+           - Browser compatibility
+        
+        Remember to add appropriate error handling and user feedback when fixing bugs.

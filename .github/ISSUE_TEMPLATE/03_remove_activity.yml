@@ -1,0 +1,97 @@
+name: Remove Activity
+description: Request to remove an extracurricular activity from the website
+title: "Remove Activity: "
+labels: ["activity", "removal"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Activity Removal Form
+        Please fill out this form to request the removal of an extracurricular activity from the school website.
+        
+        All fields marked with an asterisk (*) are required.
+
+  - type: input
+    id: activity-name
+    attributes:
+      label: Activity Name*
+      description: What is the name of the activity you want to remove?
+      placeholder: "Chess Club"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: removal-reason
+    attributes:
+      label: Reason for Removal*
+      description: Why is this activity being removed?
+      options:
+        - Activity is no longer offered
+        - Activity is temporarily suspended
+        - Activity has been renamed or merged with another activity
+        - Other (please specify below)
+    validations:
+      required: true
+
+  - type: textarea
+    id: removal-details
+    attributes:
+      label: Additional Details*
+      description: Please provide any additional details about why this activity is being removed
+      placeholder: "The Chess Club is being discontinued due to lack of student interest."
+    validations:
+      required: true
+
+  - type: input
+    id: effective-date
+    attributes:
+      label: Effective Date*
+      description: When should this activity be removed? (YYYY-MM-DD)
+      placeholder: "2023-12-31"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: notification
+    attributes:
+      label: Student Notification*
+      description: Have the currently registered students been notified?
+      options:
+        - label: Yes, all registered students have been notified
+        - label: No, students have not been notified
+        - label: Not applicable (no students registered)
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: Additional Information
+      description: Is there any other information we should know about this removal?
+      placeholder: "Students who were in Chess Club are being encouraged to join the Strategy Games Club instead."
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ## For Copilot/Developer Reference
+        
+        When implementing this request:
+        
+        1. Find and remove the activity from the activities data by name
+        2. Consider handling any existing registrations for this activity
+        3. You may want to add a notification or redirect for students who try to access this activity
+        
+        Code suggestion:
+        ```javascript
+        // Find the activity index
+        const activityIndex = activities.findIndex(a => a.name === activityName);
+        
+        // Remove the activity if found
+        if (activityIndex !== -1) {
+          activities.splice(activityIndex, 1);
+        }
+        ```

@@ -1,0 +1,157 @@
+name: Add New Activity
+description: Request to add a new extracurricular activity to the website
+title: "New Activity: "
+labels: ["enhancement", "activity"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Activity Request Form
+        Please fill out this form to request adding a new extracurricular activity to the school website.
+        
+        All fields marked with an asterisk (*) are required.
+
+  - type: input
+    id: activity-name
+    attributes:
+      label: Activity Name*
+      description: What is the name of the new activity?
+      placeholder: "Chess Club"
+    validations:
+      required: true
+
+  - type: textarea
+    id: activity-description
+    attributes:
+      label: Activity Description*
+      description: Please provide a detailed description of the activity
+      placeholder: "Chess Club is a place for students to learn and play chess. All skill levels welcome!"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: activity-category
+    attributes:
+      label: Activity Category*
+      description: What type of activity is this?
+      options:
+        - Academic
+        - Arts
+        - Sports
+        - Technology
+        - Community Service
+        - Other (please specify in description)
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: activity-days
+    attributes:
+      label: Meeting Days*
+      description: What days will this activity meet?
+      options:
+        - label: Monday
+        - label: Tuesday
+        - label: Wednesday
+        - label: Thursday
+        - label: Friday
+        - label: Saturday
+        - label: Sunday
+    validations:
+      required: true
+
+  - type: dropdown
+    id: activity-time
+    attributes:
+      label: Meeting Time*
+      description: When does this activity meet?
+      options:
+        - Before School (morning)
+        - After School (afternoon)
+        - Weekend
+        - Other (please specify)
+    validations:
+      required: true
+
+  - type: input
+    id: activity-start-time
+    attributes:
+      label: Start Time*
+      description: What time does the activity start? (24-hour format)
+      placeholder: "15:30"
+    validations:
+      required: true
+
+  - type: input
+    id: activity-end-time
+    attributes:
+      label: End Time*
+      description: What time does the activity end? (24-hour format)
+      placeholder: "17:00"
+    validations:
+      required: true
+
+  - type: input
+    id: activity-location
+    attributes:
+      label: Location*
+      description: Where will this activity take place?
+      placeholder: "Room 123"
+    validations:
+      required: true
+
+  - type: input
+    id: activity-instructor
+    attributes:
+      label: Teacher/Sponsor*
+      description: Who is the teacher or sponsor for this activity?
+      placeholder: "Ms. Johnson"
+    validations:
+      required: true
+
+  - type: input
+    id: activity-max-participants
+    attributes:
+      label: Maximum Participants
+      description: What is the maximum number of students who can participate? (Leave blank if no limit)
+      placeholder: "20"
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: Additional Information
+      description: Is there any other information we should know about this activity?
+      placeholder: "Students should bring their own chess sets if possible. Some will be provided."
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ## For Copilot/Developer Reference
+        
+        When implementing this request, the activity should be added to the appropriate data structure with the following format:
+        
+        ```javascript
+        {
+          "name": "Activity Name",
+          "details": {
+            "description": "Activity description",
+            "category": "Activity category",
+            "location": "Activity location",
+            "instructor": "Teacher name",
+            "max_participants": 20, // Number or null if unlimited
+            "schedule": "Days, Start Time - End Time",
+            "schedule_details": {
+              "days": ["Day1", "Day2"],
+              "start_time": "15:30",
+              "end_time": "17:00",
+              "time_category": "morning/afternoon/weekend"
+            }
+          }
+        }
+        ```
