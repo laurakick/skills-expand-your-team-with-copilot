@@ -233,6 +233,7 @@ document.addEventListener("DOMContentLoaded", () => {
       currentUser = data;
       localStorage.setItem("currentUser", JSON.stringify(data));
       updateAuthUI();
+      loadRecentEmails(); // Load this teacher's recent emails
       closeLoginModalHandler();
       showMessage(`Welcome, ${currentUser.display_name}!`, "success");
       return true;
@@ -693,6 +694,24 @@ document.addEventListener("DOMContentLoaded", () => {
       registrationModal.classList.add("show");
     }, 10);
     
+    // Add helper text for email suggestions if teacher has recent emails
+    if (currentUser && recentEmails.length > 0) {
+      const helperText = document.createElement("div");
+      helperText.className = "form-helper-text";
+      helperText.textContent = "Start typing to see your recently used emails";
+      
+      // Insert after the email input
+      const emailGroup = emailInput.closest(".form-group");
+      
+      // Remove any existing helper text
+      const existingHelperText = emailGroup.querySelector(".form-helper-text");
+      if (existingHelperText) {
+        existingHelperText.remove();
+      }
+      
+      emailGroup.appendChild(helperText);
+    }
+    
     // Setup email suggestions
     setupEmailSuggestions();
   }
@@ -736,7 +755,7 @@ document.addEventListener("DOMContentLoaded", () => {
     suggestionsContainer.innerHTML = "";
     
     // If no input or no matches, hide suggestions
-    if (inputValue === "" || filteredEmails.length === 0) {
+    if (filteredEmails.length === 0) {
       suggestionsContainer.classList.remove("show");
       return;
     }
@@ -765,8 +784,17 @@ document.addEventListener("DOMContentLoaded", () => {
       suggestionsContainer.appendChild(suggestion);
     });
     
-    // Show suggestions
-    suggestionsContainer.classList.add("show");
+    // Add a helpful message if this is the first time or no recent emails
+    if (filteredEmails.length === 0 && recentEmails.length === 0 && inputValue) {
+      const helpMessage = document.createElement("div");
+      helpMessage.className = "email-suggestion-help";
+      helpMessage.textContent = "Start typing a student email...";
+      suggestionsContainer.appendChild(helpMessage);
+      suggestionsContainer.classList.add("show");
+    } else {
+      // Show suggestions
+      suggestionsContainer.classList.add("show");
+    }
   }
   
   // Handle keyboard navigation for suggestions
@@ -828,6 +856,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const suggestionsContainer = document.getElementById("email-suggestions");
       if (suggestionsContainer) {
         suggestionsContainer.remove();
+      }
+      
+      // Clean up helper text
+      const helperText = document.querySelector(".form-helper-text");
+      if (helperText) {
+        helperText.remove();
       }
       
       // Remove event listeners

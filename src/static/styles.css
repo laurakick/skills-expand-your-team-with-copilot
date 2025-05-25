@@ -700,7 +700,22 @@ footer {
   color: var(--primary);
 }
 
+.email-suggestion-help {
+  padding: 8px 12px;
+  color: var(--text-secondary);
+  font-style: italic;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
 /* Position the email suggestions container correctly */
 .form-group {
   position: relative;
+}
+
+.form-helper-text {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+  font-style: italic;
 }
